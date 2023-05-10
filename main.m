@@ -4,6 +4,7 @@ addpath('./edo')
 addpath('./util')
 
 function null = SolveLetraA()
+    clear;
     fprintf('---------Solucao Letra A---------\n')
     % definicao das variavies
     syms y(x) x0 y0;
@@ -35,6 +36,39 @@ function null = SolveLetraA()
 
 end
 
+function null = SolveLetraB()
+    clear;
+    fprintf('---------Solucao Letra B---------\n')
+    % definicao das variavies
+    syms y(x) x0 y0;
+
+    % definindo o lado direito da EDO
+    RHS = "(sin(x)/x^3) - (3*y/x)"
+
+    % condicoes iniciais
+    x0 = pi;
+    y0 = 1;
+
+    [f, sol, PVIstr, yx, yxstr] = solveEDO( RHS, x0, y0 );
+
+    %    f   - O lado direito f(x, y(x)) da ODE como funcção numérica
+    %    sol - Solução simbólica do problema do valor inicial
+    %    PVIstr - Descrição textual do PVI
+    %    yx - Solução numérica do PVI
+    %    yxstr - Descrição textual da função que é solução do PVI
+
+    fprintf('\n')
+    disp(PVIstr)
+    fprintf('\nSolucao do PVI: ')
+    disp(yxstr)
+    disp(sol)
+    fprintf('\n')
+    n = 5.0;
+    passo = 1.0;
+
+    PlotaGraficoComSolucoes(f,yx,passo,n,x0,y0)
+end
+
 function null = PlotaGraficoComSolucoes(f,yx, passo, n,x0,y0)
     Y_Solucoes = []
     x = passo;
@@ -61,11 +95,11 @@ function null = PlotaGraficoComSolucoes(f,yx, passo, n,x0,y0)
     x = ax(1) : 0.01 : ax(2);
     plot(x,yx(x),'b')
 
-    Y_Solucoes = [Y_Solucoes output]
+    Y_Solucoes = [Y_Solucoes output];
 
     leg{end+1} = sprintf('Euler');
     [Euler_x Euler_y] = Euler(f, x0, y0, passo, n);
-    plot(Euler_x,Euler_y,'r');
+    plot(Euler_x,Euler_y,'r+-');
     Y_Solucoes = [Y_Solucoes Euler_y(:)];
 
     leg{end+1} = sprintf('Euler Melhorado');
@@ -75,7 +109,7 @@ function null = PlotaGraficoComSolucoes(f,yx, passo, n,x0,y0)
 
     leg{end+1} = sprintf('Euler Modificado');
     [EulerMod_x EulerMod_y] = EulerModificado(f, x0, y0, passo, n);
-    plot(EulerMod_x,EulerMod_y,'y--');
+    plot(EulerMod_x,EulerMod_y,'m--');
     Y_Solucoes = [Y_Solucoes EulerMod_y(:)];
 
     leg{end+1} = sprintf('Van der Houwen’s/Wray third-order');
@@ -108,7 +142,7 @@ function null = PlotaGraficoComSolucoes(f,yx, passo, n,x0,y0)
 
     leg{end+1} = sprintf('Dormand_Prince PassoFixo');
     [DPpf_x DPpf_y] = RungeKutta_Dormand_Prince_ode45(f, x0, y0, passo, n,true);
-    plot(DPpf_x, DPpf_y,'yd-');
+    plot(DPpf_x, DPpf_y,'md-');
     Y_Solucoes = [Y_Solucoes DPpf_y(:)];
 
     leg{end+1} = sprintf('Dormand_Prince PassoAdaptativo');
@@ -132,33 +166,29 @@ function null = PlotaGraficoComSolucoes(f,yx, passo, n,x0,y0)
 
     figure (2);
     hold on;
+    markers = {'r+-','g', 'm--', 'cd-', 'rs-', 'bo-', 'md-','rd-'};
+    mk = 1;
+    for i = 3:9
+        semilogy(Euler_x(2:end),Erros(2:end,i),markers(mk))
+        mk++;
+    endfor
 
-    semilogy(Euler_x, Erros(:,3), "r")
-
-    semilogy(EulerMe_x, Erros(:,4), "g")
-
-    semilogy(EulerMod_x, Erros(:,5), "y--")
-
-    %semilogy(Van_T, Erros(:,6), "cd-")
-
-    %semilogy(Rals_T, Erros(:,7), "rs-")
-
-    %semilogy(DP_x, Erros(:,8), "bo-")
-
-    %semilogy(DPpf_x, Erros(:,9), "yd-")
+    ErroPasso_Adaptativo = abs(yx(DPpa_x) - DPpa_y);
+    semilogy(DPpa_x,ErroPasso_Adaptativo,markers(mk))
 
 
     legend("Euler", "Euler Melhorado", "Euler Modificado",
            "Van der Houwen’s/Wray third-order", "Ralston’s fourth-order method",
-           "Dormand_Prince RungeKutta", "Dormand_Prince PassoFixo")
+           "Dormand_Prince RungeKutta", "Dormand_Prince PassoFixo","Dormand_Prince PassoAdaptativo")
 
-    printTabX(Y_Solucoes(:,1), "x", "%5.2f", "tabela")
-    printTabX(Y_Solucoes(:,2), "Valor Exato", "%5.2f", "tabela")
-    printTabX(Y_Solucoes(:,3), "Euler", "%5.2f", "tabela")
-    printTabX(Y_Solucoes(:,4), "Euler Melhorado", "%5.2f", "tabela")
-    printTabX(Y_Solucoes(:,5), "Euler Modificado", "%5.2f", "tabela")
+    fprintf('%10s | %10s | %10s | %10s | %10s | %10s | %10s | %10s | %10s | %10s\n', 'x', 'Valor Exato', "Euler", "Euler Melhorado", "Euler Modificado",
+           "Van der Houwen’s/Wray third-order", "Ralston’s fourth-order method",
+           "Dormand_Prince RungeKutta", "Dormand_Prince PassoFixo","Dormand_Prince PassoAdaptativo");
+    fprintf('-------------------------------------------------------------------------------------------\n');
 
-
+    for i=1:length(Euler_x)
+        fprintf('%10.2f | %10.2f | %10.2f\n', x(i), Euler_x(i) , yx(Euler_x(i)) , Euler_y(Euler_x(i)));
+    end
 
 
 
