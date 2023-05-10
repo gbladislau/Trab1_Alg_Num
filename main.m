@@ -1,6 +1,7 @@
 pkg load symbolic
 clc
 addpath('./edo')
+addpath('./util')
 
 function null = SolveLetraA()
     fprintf('---------Solucao Letra A---------\n')
@@ -46,8 +47,10 @@ function null = PlotaGraficoComSolucoes(f,yx, passo, n,x0,y0)
         x = x+passo;
     end
 
+    figure(1);
     hold on;
     #MOSTRANDO ONDE estao os passos x e y
+
     scatter(output(:,1),output(:,2), 20, 'k', 'filled')
 
     leg = {};
@@ -115,7 +118,7 @@ function null = PlotaGraficoComSolucoes(f,yx, passo, n,x0,y0)
     set(legend(leg),'fontsize',18);
     epsfilename = 'Letra A';
     fprintf('Gerando grafico vetorial em arquivo EPS ''%s''...\n', epsfilename );
-    print(epsfilename, '-depsc2');
+    %print(epsfilename, '-depsc2');
 
 
     Erros = [];
@@ -123,6 +126,40 @@ function null = PlotaGraficoComSolucoes(f,yx, passo, n,x0,y0)
     for i = 2 : size(Y_Solucoes,2)
         Erros = [Erros abs(Y_Solucoes(:,2) - Y_Solucoes(:,i))];
     endfor
+
+
+    %QUESTÃO 6:
+
+    figure (2);
+    hold on;
+
+    semilogy(Euler_x, Erros(:,3), "r")
+
+    semilogy(EulerMe_x, Erros(:,4), "g")
+
+    semilogy(EulerMod_x, Erros(:,5), "y--")
+
+    %semilogy(Van_T, Erros(:,6), "cd-")
+
+    %semilogy(Rals_T, Erros(:,7), "rs-")
+
+    %semilogy(DP_x, Erros(:,8), "bo-")
+
+    %semilogy(DPpf_x, Erros(:,9), "yd-")
+
+
+    legend("Euler", "Euler Melhorado", "Euler Modificado",
+           "Van der Houwen’s/Wray third-order", "Ralston’s fourth-order method",
+           "Dormand_Prince RungeKutta", "Dormand_Prince PassoFixo")
+
+    printTabX(Y_Solucoes(:,1), "x", "%5.2f", "tabela")
+    printTabX(Y_Solucoes(:,2), "Valor Exato", "%5.2f", "tabela")
+    printTabX(Y_Solucoes(:,3), "Euler", "%5.2f", "tabela")
+    printTabX(Y_Solucoes(:,4), "Euler Melhorado", "%5.2f", "tabela")
+    printTabX(Y_Solucoes(:,5), "Euler Modificado", "%5.2f", "tabela")
+
+
+
 
 
 end
