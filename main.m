@@ -43,11 +43,14 @@ function null = SolveLetraB()
     syms y(x) x0 y0;
 
     % definindo o lado direito da EDO
-    RHS = "(sin(x)/x^3) - (3*y/x)"
+
+    %%%%% -CONSERTAR- %%%%%
+    RHS = "(sin(x)/x^3) - (3*y/x)" %*
+    %%%%% ----------- %%%%%
 
     % condicoes iniciais
-    x0 = pi;
-    y0 = 1;
+    x0 = pi; %*
+    y0 = 1; %*
 
     [f, sol, PVIstr, yx, yxstr] = solveEDO( RHS, x0, y0 );
 
@@ -63,8 +66,8 @@ function null = SolveLetraB()
     disp(yxstr)
     disp(sol)
     fprintf('\n')
-    n = 5.0;
-    passo = 1.0;
+    n = 5.0; %*
+    passo = 1.0; %*
 
     PlotaGraficoComSolucoes(f,yx,passo,n,x0,y0)
 end
@@ -181,16 +184,14 @@ function null = PlotaGraficoComSolucoes(f,yx, passo, n,x0,y0)
            "Van der Houwen’s/Wray third-order", "Ralston’s fourth-order method",
            "Dormand_Prince RungeKutta", "Dormand_Prince PassoFixo","Dormand_Prince PassoAdaptativo")
 
-    fprintf('%10s | %10s | %10s | %10s | %10s | %10s | %10s | %10s | %10s | %10s\n', 'x', 'Valor Exato', "Euler", "Euler Melhorado", "Euler Modificado",
-           "Van der Houwen’s/Wray third-order", "Ralston’s fourth-order method",
-           "Dormand_Prince RungeKutta", "Dormand_Prince PassoFixo","Dormand_Prince PassoAdaptativo");
+    fprintf('%s | %s | %s | %s | %s | %s | %s | %s | %s | %s\n', 'x', 'Valor Exato', "Euler", "Euler Melhorado", "Euler Modificado",
+           "Van der Houwen’s/Wray", "Ralston",
+           "DP RungeKutta", "DP PassoFixo","DP PassoAdaptativo");
     fprintf('-------------------------------------------------------------------------------------------\n');
 
     for i=1:length(Euler_x)
-        fprintf('%10.2f | %10.2f | %10.2f\n', x(i), Euler_x(i) , yx(Euler_x(i)) , Euler_y(Euler_x(i)));
+        fprintf('%10.2f | %10.2f | %10.2f\n', x(i), Euler_x(i) , yx(Euler_x(i)) , Euler_y(i));
     end
-
-
 
 end
 SolveLetraA()
