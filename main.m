@@ -45,11 +45,81 @@ function null = SolveLetraB()
     % definindo o lado direito da EDO
 
     %%%%% -CONSERTAR- %%%%%
-    RHS = "(sin(x)/x^3) - (3*y/x)" %*
+    RHS = "((sin(x)/x^2) - (3*y))/x" 
     %%%%% ----------- %%%%%
 
     % condicoes iniciais
-    x0 = pi; %*
+    x0 = pi; 
+    y0 = 1; 
+
+    [f, sol, PVIstr, yx, yxstr] = solveEDO( RHS, x0, y0 );
+
+    %    f   - O lado direito f(x, y(x)) da ODE como funcção numérica
+    %    sol - Solução simbólica do problema do valor inicial
+    %    PVIstr - Descrição textual do PVI
+    %    yx - Solução numérica do PVI
+    %    yxstr - Descrição textual da função que é solução do PVI
+
+    fprintf('\n')
+    disp(PVIstr)
+    fprintf('\nSolucao do PVI: ')
+    disp(yxstr)
+    disp(sol)
+    fprintf('\n')
+    n = 5.0; 
+    passo = 1.0; 
+
+    PlotaGraficoComSolucoes(f,yx,passo,n,x0,y0)
+end
+
+function null = SolveLetraC()
+    clear;
+    fprintf('---------Solucao Letra C---------\n')
+    % definicao das variavies
+    syms y(x) x0 y0;
+
+    % definindo o lado direito da EDO
+
+
+    RHS = "(power(cos(x),2) - (tan(x)*y))" 
+
+
+    % condicoes iniciais
+    x0 = (pi/8); 
+    y0 = 1; 
+
+    [f, sol, PVIstr, yx, yxstr] = solveEDO( RHS, x0, y0 );
+
+    %    f   - O lado direito f(x, y(x)) da ODE como funcção numérica
+    %    sol - Solução simbólica do problema do valor inicial
+    %    PVIstr - Descrição textual do PVI
+    %    yx - Solução numérica do PVI
+    %    yxstr - Descrição textual da função que é solução do PVI
+
+    fprintf('\n')
+    disp(PVIstr)
+    fprintf('\nSolucao do PVI: ')
+    disp(yxstr)
+    disp(sol)
+    fprintf('\n')
+    n = 5.0;
+    passo = (pi/16); 
+
+    PlotaGraficoComSolucoes(f,yx,passo,n,x0,y0)
+end
+
+function null = SolveLetraD()
+    clear;
+    fprintf('---------Solucao Letra D---------\n')
+    % definicao das variavies
+    syms y(x) x0 y0;
+
+    % definindo o lado direito da EDO
+
+    RHS = "(1 - (1/x) - (2*y))/x" 
+
+    % condicoes iniciais
+    x0 = 1; %*
     y0 = 1; %*
 
     [f, sol, PVIstr, yx, yxstr] = solveEDO( RHS, x0, y0 );
@@ -66,8 +136,8 @@ function null = SolveLetraB()
     disp(yxstr)
     disp(sol)
     fprintf('\n')
-    n = 5.0; %*
-    passo = 1.0; %*
+    n = 5.0; 
+    passo = 0.1; 
 
     PlotaGraficoComSolucoes(f,yx,passo,n,x0,y0)
 end
@@ -194,4 +264,4 @@ function null = PlotaGraficoComSolucoes(f,yx, passo, n,x0,y0)
     end
 
 end
-SolveLetraA()
+SolveLetraD()
