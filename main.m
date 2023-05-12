@@ -266,5 +266,78 @@ function null = PlotaGraficoComSolucoes(f,yx, passo, n,x0,y0)
     end
 
 end
-SolveLetraD()
+
+function null = SolveQuestao31()
+
+
+
+
+    % C = Qin - Qout, sendo uma constante
+    %SOLUÇÃO NUMÉRICA DO PVI
+    syms y(t) C t0 v0;
+    DE = diff(y, t) == C
+    cond = y(t0) == v0
+    sol = dsolve(DE, cond)
+
+    %SOLUÇÃO SIMBÓLICA DO PVI
+
+
+    yt = matlabFunction(sol);
+    disp(yt);
+
+
+    %3 CASOS:
+    syms Qin Qout;
+    t0 = 0
+    v0 = 2000
+    Vmax = 5000
+    Vmin = 0
+    %Cenário de esvaziamento: Qin = 45, Qout = 50
+    Qin = 45
+    Qout = 50
+    DE = diff(y, t) == Qin - Qout
+    cond = y(t0) == v0
+    sol = dsolve(DE, cond)
+    tempoEsvaziamento = solve(sol)
+    figure(3);
+    hold on;
+    axis([0, 400, 0, 5000])
+    ylim([0,5000])
+    plot(0:400, 5000);
+    limits = axis();
+    ezplot(sol, [0,400]);
+    plot(0:400, v0);
+    limits = axis();
+
+
+
+    %Cenário de transbordamento: Qin = 50, Qout = 45
+    Qin = 50
+    Qout = 45
+    DE = diff(y, t) == Qin - Qout
+    cond = y(t0) == v0
+    sol = dsolve(DE, cond)
+    %tempoTransbordamento  = solve(sol, 5000)
+    %PLOT
+
+    %Cenário de constância no volume: Qin = 50, Qout = 50
+    Qin = 50
+    Qout = 50
+    DE = diff(y, t) == Qin - Qout
+    cond = y(t0) == v0
+    sol = dsolve(DE, cond)
+    %plot
+
+
+
+
+
+
+
+
+end
+
+
+
+SolveQuestao31()
 
