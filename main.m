@@ -45,12 +45,12 @@ function null = SolveLetraB()
     % definindo o lado direito da EDO
 
     %%%%% -CONSERTAR- %%%%%
-    RHS = "((sin(x)/x^2) - (3*y))/x" 
+    RHS = "((sin(x)/x^2) - (3*y))/x"
     %%%%% ----------- %%%%%
 
     % condicoes iniciais
-    x0 = pi; 
-    y0 = 1; 
+    x0 = pi;
+    y0 = 1;
 
     [f, sol, PVIstr, yx, yxstr] = solveEDO( RHS, x0, y0 );
 
@@ -64,10 +64,10 @@ function null = SolveLetraB()
     disp(PVIstr)
     fprintf('\nSolucao do PVI: ')
     disp(yxstr)
-    disp(sol)
+
     fprintf('\n')
-    n = 5.0; 
-    passo = 1.0; 
+    n = 5.0;
+    passo = 1.0;
 
     PlotaGraficoComSolucoes(f,yx,passo,n,x0,y0)
 end
@@ -81,12 +81,12 @@ function null = SolveLetraC()
     % definindo o lado direito da EDO
 
 
-    RHS = "(power(cos(x),2) - (tan(x)*y))" 
+    RHS = "(power(cos(x),2) - (tan(x)*y))"
 
 
     % condicoes iniciais
-    x0 = (pi/8); 
-    y0 = 1; 
+    x0 = (pi/8);
+    y0 = 1;
 
     [f, sol, PVIstr, yx, yxstr] = solveEDO( RHS, x0, y0 );
 
@@ -100,10 +100,10 @@ function null = SolveLetraC()
     disp(PVIstr)
     fprintf('\nSolucao do PVI: ')
     disp(yxstr)
-    disp(sol)
+
     fprintf('\n')
     n = 5.0;
-    passo = (pi/16); 
+    passo = (pi/16);
 
     PlotaGraficoComSolucoes(f,yx,passo,n,x0,y0)
 end
@@ -116,7 +116,7 @@ function null = SolveLetraD()
 
     % definindo o lado direito da EDO
 
-    RHS = "(1 - (1/x) - (2*y))/x" 
+    RHS = "(1 - (1/x) - (2*y))/x"
 
     % condicoes iniciais
     x0 = 1; %*
@@ -134,21 +134,19 @@ function null = SolveLetraD()
     disp(PVIstr)
     fprintf('\nSolucao do PVI: ')
     disp(yxstr)
-    disp(sol)
+
     fprintf('\n')
-    n = 5.0; 
-    passo = 0.1; 
+    n = 5.0;
+    passo = 0.1;
 
     PlotaGraficoComSolucoes(f,yx,passo,n,x0,y0)
 end
 
 function null = PlotaGraficoComSolucoes(f,yx, passo, n,x0,y0)
-    Y_Solucoes = []
-    x = passo;
+    Y_Solucoes = [];
+    x = x0;
     output = [];
-    output = [output ; x0, y0];
-    fprintf("Valor de x = %f // Valor de y = %f\n",x0,y0)
-    for i = 0 : n-1
+    for i = 0 : n
         fprintf("Valor de x = %f // Valor de y = %f\n",x, yx(x))
         output = [output ; x, yx(x)];
         x = x+passo;
@@ -165,7 +163,7 @@ function null = PlotaGraficoComSolucoes(f,yx, passo, n,x0,y0)
     leg{end+1} = sprintf('y(x)');
     # mostando a funcao simbolica
     ax = [output(1,1) output(end,1)];
-    x = ax(1) : 0.01 : ax(2);
+    x = ax(1) : passo/10 : ax(2);
     plot(x,yx(x),'b')
 
     Y_Solucoes = [Y_Solucoes output];
@@ -254,14 +252,19 @@ function null = PlotaGraficoComSolucoes(f,yx, passo, n,x0,y0)
            "Van der Houwen’s/Wray third-order", "Ralston’s fourth-order method",
            "Dormand_Prince RungeKutta", "Dormand_Prince PassoFixo","Dormand_Prince PassoAdaptativo")
 
-    fprintf('%s | %s | %s | %s | %s | %s | %s | %s | %s | %s\n', 'x', 'Valor Exato', "Euler", "Euler Melhorado", "Euler Modificado",
-           "Van der Houwen’s/Wray", "Ralston",
-           "DP RungeKutta", "DP PassoFixo","DP PassoAdaptativo");
-    fprintf('-------------------------------------------------------------------------------------------\n');
+    fprintf('%12s | %12s | %12s | %12s | %12s | %12s | %12s | %12s | %12s | %12s\n',
+    'x', 'Valor Exato',
+    'Euler', 'Euler Mel.', 'Euler Mod.',
+    'V d Houven/Wray', 'Ralston' ,
+    'Dorm.-Pr45-Bu', 'ODE45 fixo', 'ODE45 adap');
+    fprintf('----------------------------------------------------------------------------------------------------------------------------------------------------\n');
 
     for i=1:length(Euler_x)
-        fprintf('%10.2f | %10.2f | %10.2f\n', x(i), Euler_x(i) , yx(Euler_x(i)) , Euler_y(i));
+        fprintf('%12.7f | %12.7f | %12.7f | %12.7f | %12.7f | %12.7f | %12.7f | %12.7f | %12.7f | ----\n',
+        Euler_x(i) , yx(Euler_x(i)) , Euler_y(i), EulerMe_y(i), EulerMod_y(i),Van_Y(i), Rals_Y(i), DP_y(i),
+        DPpf_y(i));
     end
 
 end
 SolveLetraD()
+
