@@ -220,10 +220,10 @@ function null = PlotaGraficoComSolucoes(f,yx, passo, n,x0,y0)
     [DPpa_x DPpa_y] = RungeKutta_Dormand_Prince_ode45(f, x0, y0, passo, n,false);
     plot(DPpa_x, DPpa_y,'rd-');
 
-    set(legend(leg),'fontsize',18);
+    set(legend(leg));
     epsfilename = 'Letra A';
     fprintf('Gerando grafico vetorial em arquivo EPS ''%s''...\n', epsfilename );
-    %print(epsfilename, '-depsc2');
+    print epsfilename '-depsc2' "-S10,10";
 
 
     Erros = [];
@@ -260,10 +260,17 @@ function null = PlotaGraficoComSolucoes(f,yx, passo, n,x0,y0)
     fprintf('----------------------------------------------------------------------------------------------------------------------------------------------------\n');
 
     for i=1:length(Euler_x)
-        fprintf('%12.7f | %12.7f | %12.7f | %12.7f | %12.7f | %12.7f | %12.7f | %12.7f | %12.7f | ----\n',
+        fprintf('%12.7f | %12.7f | %12.7f | %12.7f | %12.7f | %12.7f    | %12.7f | %12.7f  | %12.7f | ----\n',
         Euler_x(i) , yx(Euler_x(i)) , Euler_y(i), EulerMe_y(i), EulerMod_y(i),Van_Y(i), Rals_Y(i), DP_y(i),
         DPpf_y(i));
     end
+    fprintf("ERROS\n")
+    for i=1:length(Euler_x)
+        fprintf('%12.7f | %12.7f | %12.7f | %12.7f | %12.7f | %12.7f    | %12.7f | %12.7f  | %12.7f | ----\n',
+        Euler_x(i) , yx(Euler_x(i)) - yx(Euler_x(i)) , Erros(i,3) , Erros(i,4), Erros(i,5) ,Erros(i,6),Erros(i,7), Erros(i,8),
+        Erros(i,9));
+    end
+    
 
 end
 
@@ -421,5 +428,4 @@ function null = SolveQuestao32()
 
 end
 
-SolveQuestao32()
 
