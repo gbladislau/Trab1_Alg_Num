@@ -274,15 +274,15 @@ function null = SolveQuestao31()
 
     % C = Qin - Qout, sendo uma constante
     %SOLUÇÃO NUMÉRICA DO PVI
-    syms y(t) C t0 v0;
-    DE = diff(y, t) == C
+    syms y(t) C t0 v0 Qin Qout;
+    DE= diff(y, t) == C
     cond = y(t0) == v0
-    sol = dsolve(DE, cond)
+    V = dsolve(DE,cond)
 
     %SOLUÇÃO SIMBÓLICA DO PVI
 
 
-    yt = matlabFunction(sol);
+    yt = matlabFunction(V);
     disp(yt);
 
 
@@ -292,41 +292,72 @@ function null = SolveQuestao31()
     v0 = 2000
     Vmax = 5000
     Vmin = 0
+
+
     %Cenário de esvaziamento: Qin = 45, Qout = 50
+
     Qin = 45
     Qout = 50
     DE = diff(y, t) == Qin - Qout
     cond = y(t0) == v0
     sol = dsolve(DE, cond)
-    tempoEsvaziamento = solve(sol)
+
     figure(3);
     hold on;
-    axis([0, 400, 0, 5000])
-    ylim([0,5000])
-    plot(0:400, 5000);
-    limits = axis();
-    ezplot(sol, [0,400]);
+    axis([0, 400, 0, Vmax]);
+
     plot(0:400, v0);
-    limits = axis();
+    plot(0:400, Vmax, 'g');
+    ezplot(sol, [0,400]);
+
+    axis([0, 400, 0, Vmax]);
+
+    legend("v0=2000 L", "vMax=5000 L", "V(t)");
+
 
 
 
     %Cenário de transbordamento: Qin = 50, Qout = 45
+
     Qin = 50
     Qout = 45
     DE = diff(y, t) == Qin - Qout
     cond = y(t0) == v0
     sol = dsolve(DE, cond)
-    %tempoTransbordamento  = solve(sol, 5000)
-    %PLOT
+    %O tempo de transbordamento é 600
+
+    figure(4);
+    hold on;
+    axis([0, 600, 0, Vmax]);
+
+    plot(0:600, v0);
+    plot(0:600, Vmax, 'g');
+    ezplot(sol, [0,600]);
+
+    axis([0, 600, 0, Vmax]);
+
+    legend("v0=2000 L", "vMax=5000 L", "V(t)");
 
     %Cenário de constância no volume: Qin = 50, Qout = 50
+
     Qin = 50
     Qout = 50
     DE = diff(y, t) == Qin - Qout
     cond = y(t0) == v0
     sol = dsolve(DE, cond)
-    %plot
+
+    figure(5);
+    hold on;
+    axis([0, 500, v0, Vmax]);
+
+    plot(0:500, v0);
+    plot(0:500, Vmax, 'g');
+    ezplot(sol, [0,500, 0, 5000]);
+
+    axis([0, 500, 0, 5000]);
+
+    legend("v0=2000 L", "vMax=5000 L", "V(t)");
+
 
 
 
@@ -337,7 +368,58 @@ function null = SolveQuestao31()
 
 end
 
+function null = SolveQuestao32()
+
+     % QUESTÃO 3.2
+
+    syms qin cin c(t) c0 b qout;
+
+    v(t) =(qin - qout)*t + b
+
+    DE = diff(c, t) == (qin * (cin - c(t)))/v(t)
+    cond = c(0) == c0
+    c(t) = dsolve(DE, cond)
+
+    syms m(t);
+    m(t)=v(t) * c(t)
+
+    cNum = matlabFunction(c(t))
+    mNum = matlabFunction(m(t))
 
 
-SolveQuestao31()
+
+    %Caso de esvaziamento
+
+    figure(6);
+    hold on;
+    qin = 40
+    qout = 45
+    v0 = 2000
+    c0 = 0.05
+    cin = 2
+    vMax = 5000
+
+    t = 0:0.1:400;
+
+    cVet = cNum(v0, c0,cin, qin, qout, t);
+
+
+    plot(t, cVet, c0, cin)
+    plot(0:400, c0)
+    plot(0:400, cin)
+
+    figure(7);
+    hold on;
+
+    mVet = mNum(v0, c0, cin, qin, qout, t);
+    axis([0,400])
+    plot(t, mVet, v0, vMax)
+    plot(0:400, v0)
+    plot(0:400, vMax)
+
+
+
+end
+
+SolveQuestao32()
 
