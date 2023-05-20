@@ -2,6 +2,7 @@ pkg load symbolic
 clc
 addpath('./edo')
 addpath('./util')
+warning('off', 'all');
 
 function null = SolveLetraA()
     clear;
@@ -220,10 +221,10 @@ function null = PlotaGraficoComSolucoes(f,yx, passo, n,x0,y0)
     [DPpa_x DPpa_y] = RungeKutta_Dormand_Prince_ode45(f, x0, y0, passo, n,false);
     plot(DPpa_x, DPpa_y,'rd-');
 
-    set(legend(leg));
-    epsfilename = 'Letra A';
+    legend(leg,'location','northeastoutside');
+    epsfilename = 'Letra_A_fig_1';
     fprintf('Gerando grafico vetorial em arquivo EPS ''%s''...\n', epsfilename );
-    print epsfilename '-depsc2' "-S10,10";
+    print( epsfilename ,'-depsc2');
 
 
     Erros = [];
@@ -250,7 +251,12 @@ function null = PlotaGraficoComSolucoes(f,yx, passo, n,x0,y0)
 
     legend("Euler", "Euler Melhorado", "Euler Modificado",
            "Van der Houwen’s/Wray third-order", "Ralston’s fourth-order method",
-           "Dormand_Prince RungeKutta", "Dormand_Prince PassoFixo","Dormand_Prince PassoAdaptativo")
+           "Dormand_Prince RungeKutta", "Dormand_Prince PassoFixo","Dormand_Prince PassoAdaptativo",
+           'location','northeastoutside');
+
+    epsfilename = 'Letra_A_fig_2_erro';
+    fprintf('Gerando grafico vetorial em arquivo EPS ''%s''...\n', epsfilename );
+    print( epsfilename ,'-depsc2');
 
     fprintf('%12s | %12s | %12s | %12s | %12s | %12s | %12s | %12s | %12s | %12s\n',
     'x', 'Valor Exato',
@@ -264,13 +270,16 @@ function null = PlotaGraficoComSolucoes(f,yx, passo, n,x0,y0)
         Euler_x(i) , yx(Euler_x(i)) , Euler_y(i), EulerMe_y(i), EulerMod_y(i),Van_Y(i), Rals_Y(i), DP_y(i),
         DPpf_y(i));
     end
+    Y_t = Y_Solucoes.';
+    save "letraA vetores.txt" Y_Solucoes;
+
     fprintf("ERROS\n")
     for i=1:length(Euler_x)
         fprintf('%12.7f | %12.7f | %12.7f | %12.7f | %12.7f | %12.7f    | %12.7f | %12.7f  | %12.7f | ----\n',
         Euler_x(i) , yx(Euler_x(i)) - yx(Euler_x(i)) , Erros(i,3) , Erros(i,4), Erros(i,5) ,Erros(i,6),Erros(i,7), Erros(i,8),
         Erros(i,9));
     end
-    
+
 
 end
 
@@ -281,6 +290,7 @@ function null = SolveQuestao31()
 
     % C = Qin - Qout, sendo uma constante
     %SOLUÇÃO NUMÉRICA DO PVI
+
     syms y(t) C t0 v0 Qin Qout;
     DE= diff(y, t) == C
     cond = y(t0) == v0
@@ -291,10 +301,10 @@ function null = SolveQuestao31()
 
     yt = matlabFunction(V);
     disp(yt);
-
+    %C, t, t0, v0
 
     %3 CASOS:
-    syms Qin Qout;
+
     t0 = 0
     v0 = 2000
     Vmax = 5000
@@ -305,73 +315,62 @@ function null = SolveQuestao31()
 
     Qin = 45
     Qout = 50
-    DE = diff(y, t) == Qin - Qout
-    cond = y(t0) == v0
-    sol = dsolve(DE, cond)
+    t = 0:0.1:400;
+
+    sol = yt(Qin-Qout, t, t0, v0);
 
     figure(3);
     hold on;
-    axis([0, 400, 0, Vmax]);
-
-    plot(0:400, v0);
-    plot(0:400, Vmax, 'g');
-    ezplot(sol, [0,400]);
-
-    axis([0, 400, 0, Vmax]);
-
-    legend("v0=2000 L", "vMax=5000 L", "V(t)");
 
 
+    plot(0:400, v0, "g");
+    plot(0:400, Vmax, "r");
+    plot(t, sol, v0, Vmax);
 
+    axis([0,400])
+
+    legend({"v0 = 2000.00 L", "Vmax = 5000.00 L", "V(t)"})
 
     %Cenário de transbordamento: Qin = 50, Qout = 45
 
     Qin = 50
     Qout = 45
-    DE = diff(y, t) == Qin - Qout
-    cond = y(t0) == v0
-    sol = dsolve(DE, cond)
-    %O tempo de transbordamento é 600
+
 
     figure(4);
     hold on;
-    axis([0, 600, 0, Vmax]);
 
-    plot(0:600, v0);
-    plot(0:600, Vmax, 'g');
-    ezplot(sol, [0,600]);
 
-    axis([0, 600, 0, Vmax]);
+    t = 0:0.1:600;
 
-    legend("v0=2000 L", "vMax=5000 L", "V(t)");
+    sol = yt(Qin-Qout, t, t0, v0);
+
+    plot(0:600, v0, "r");
+    plot(0:600, Vmax, "g");
+    plot(t, sol, v0, Vmax);
+
+    axis([0,600, 0, 5000])
+
+
 
     %Cenário de constância no volume: Qin = 50, Qout = 50
 
     Qin = 50
     Qout = 50
-    DE = diff(y, t) == Qin - Qout
-    cond = y(t0) == v0
-    sol = dsolve(DE, cond)
 
     figure(5);
     hold on;
-    axis([0, 500, v0, Vmax]);
-
-    plot(0:500, v0);
-    plot(0:500, Vmax, 'g');
-    ezplot(sol, [0,500, 0, 5000]);
-
-    axis([0, 500, 0, 5000]);
-
-    legend("v0=2000 L", "vMax=5000 L", "V(t)");
 
 
+    t = 0:0.1:500;
 
+    sol = yt(Qin-Qout, t, t0, v0);
 
+    plot(0:500, v0, "r");
+    plot(0:500, Vmax, "g");
+    plot(t, sol, v0, Vmax);
 
-
-
-
+    axis([0,500, 0, 5000])
 
 end
 
@@ -392,38 +391,114 @@ function null = SolveQuestao32()
 
     cNum = matlabFunction(c(t))
     mNum = matlabFunction(m(t))
+    vNum = matlabFunction(v(t))
 
-
-
-    %Caso de esvaziamento
-
-    figure(6);
-    hold on;
-    qin = 40
-    qout = 45
     v0 = 2000
     c0 = 0.05
     cin = 2
     vMax = 5000
 
+    %Caso de esvaziamento
+
+    figure(6);
+    hold on;
+
+
+    qin = 40
+    qout = 45
+
     t = 0:0.1:400;
 
     cVet = cNum(v0, c0,cin, qin, qout, t);
-
-
+    title("Evolução temporal da concentração para o caso vazamento\n\n")
     plot(t, cVet, c0, cin)
-    plot(0:400, c0)
-    plot(0:400, cin)
+    plot(0:400, c0, "g")
+    plot(0:400, cin, "r")
+
+
+    legend("c(t)", "cin = 2.00 kg/L", "c0 = 0.05 kg/L")
 
     figure(7);
     hold on;
-
+    title("Evolução temporal do material e volume do tanque para o caso vazamento\n\n")
     mVet = mNum(v0, c0, cin, qin, qout, t);
-    axis([0,400])
+    axis([0,400, 0, 5000])
     plot(t, mVet, v0, vMax)
-    plot(0:400, v0)
-    plot(0:400, vMax)
+    plot(0:400, v0, "g")
+    plot(0:400, vMax, "r")
 
+    vVet = vNum(v0, qin, qout, t);
+    plot(t, vVet, v0, vMax)
+
+    legend("m(t)","Vmax = 5000.00 L", "v0 = 2000.00 L", "V(t)")
+
+
+
+    %Caso de transbordamento
+
+    figure(8);
+    hold on;
+
+    qin = 45
+    qout = 40
+
+    t = 0:0.1:600;
+
+    cVet = cNum(v0, c0,cin, qin, qout, t);
+    title("Evolução temporal da concentração para o caso transbordamento\n\n")
+    plot(t, cVet, c0, cin)
+    plot(0:600, c0, "g")
+    plot(0:600, cin, "r")
+
+    legend("c(t)", "cin = 2.00 kg/L", "c0 = 0.05 kg/L")
+
+    figure(9);
+    hold on;
+    title("Evolução temporal do material e volume do tanque para o caso transbordamento\n\n")
+    mVet = mNum(v0, c0, cin, qin, qout, t);
+    axis([0,600, 0, 5000])
+    plot(t, mVet, v0, vMax)
+    plot(0:600, v0, "g")
+    plot(0:600, vMax, "r")
+
+    vVet = vNum(v0, qin, qout, t);
+    plot(t, vVet, v0, vMax)
+
+    legend("m(t)","Vmax = 5000.00 L", "v0 = 2000.00 L", "V(t)")
+
+
+
+    %Caso de constancia
+
+    figure(10);
+    hold on;
+
+
+    qin = 45
+    qout = 45
+
+    t = 0:0.1:500;
+
+    cVet = cNum(v0, c0,cin, qin, qout, t);
+    title("Evolução temporal da concentração para o caso de constância\n\n")
+    plot(t, cVet, c0, cin)
+    plot(0:500, c0, "g")
+    plot(0:500, cin, "r")
+
+    legend("m(t)","Vmax = 5000.00 L", "v0 = 2000.00 L", "V(t)")
+
+
+    figure(11);
+    hold on;
+    title("Evolução temporal do material e volume do tanque para o caso de constância\n\n")
+    mVet = mNum(v0, c0, cin, qin, qout, t);
+    axis([0,500, 0, 5000])
+    plot(t, mVet, v0, vMax)
+    plot(0:500, v0, "g")
+    plot(0:500, vMax, "r")
+
+    vVet = vNum(v0, qin, qout, t);
+    plot(t, vVet, v0, vMax)
 
 
 end
