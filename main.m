@@ -331,6 +331,9 @@ function null = SolveQuestao31()
 
 
     legend("v0 = 2000.00 L", "Vmax = 5000.00 L","V (t)",'location','northeastoutside');
+    epsfilename = '3.1_esvaziamento.eps';
+    fprintf('Gerando grafico vetorial em arquivo EPS ''%s''...\n', epsfilename );
+    print( epsfilename ,'-depsc2');
     hold off;
 
     %Cenário de transbordamento: Qin = 50, Qout = 45
@@ -353,7 +356,9 @@ function null = SolveQuestao31()
     xlabel("t [min")
     ylabel("V(t) [L]")
     legend("v0 = 2000.00 L", "Vmax = 5000.00 L","V (t)",'location','northeastoutside');
-
+    epsfilename = '3.1_transbordamento.eps';
+    fprintf('Gerando grafico vetorial em arquivo EPS ''%s''...\n', epsfilename );
+    print( epsfilename ,'-depsc2');
     hold off;
 
     %Cenário de constância no volume: Qin = 50, Qout = 50
@@ -379,6 +384,9 @@ function null = SolveQuestao31()
     xlabel("t [min]")
     ylabel("V(t) [L]")
     legend("v0 = 2000.00 L", "Vmax = 5000.00 L","V (t)",'location','northeastoutside');
+    epsfilename = '3.1_volumecte.eps';
+    fprintf('Gerando grafico vetorial em arquivo EPS ''%s''...\n', epsfilename );
+    print( epsfilename ,'-depsc2');
     hold off;
 end
 
@@ -436,8 +444,7 @@ function null = Solve32_Qin_diff_Qout()
     line(x, [c0 c0], "linestyle", "--", "color", "g")
     line(x, [cin cin], "linestyle", "--", "color", "r")
 
-    legend("c(t)", "cin = 2.00 kg/L", "c0 = 0.05 kg/L")
-
+    legend("c(t)", "cin = 2.00 kg/L", "c0 = 0.05 kg/L",'location','northeastoutside')
     hold off;
 
     subplot(2,1,2)
@@ -456,8 +463,11 @@ function null = Solve32_Qin_diff_Qout()
     vVet = vNum(qin, qout, t, t0, v0);
     plot(t, vVet)
 
-    legend("m(t)", "v0 = 2000.00 L","Vmax = 5000.00, L","V(t)")
+    legend("m(t)", "v0 = 2000.00 L","Vmax = 5000.00, L","V(t)",'location','northeastoutside')
 
+    epsfilename = '3.2_esvaziamento.eps';
+    fprintf('Gerando grafico vetorial em arquivo EPS ''%s''...\n', epsfilename );
+    print( epsfilename ,'-depsc2');
     hold off;
 
     fprintf("4. Caso de transbordamento: Qin = 45, Qout = 40\n")
@@ -484,7 +494,7 @@ function null = Solve32_Qin_diff_Qout()
     line(x, [c0 c0], "linestyle", "--", "color", "g")
     line(x, [cin cin], "linestyle", "--", "color", "r")
 
-    legend("c(t)", "c0 = 0.05 kg/L", "cin = 2.00 kg/L")
+    legend("c(t)", "c0 = 0.05 kg/L", "cin = 2.00 kg/L",'location','northeastoutside')
     hold off;
 
     subplot(2,1,2)
@@ -502,8 +512,10 @@ function null = Solve32_Qin_diff_Qout()
     vVet = vNum(qin, qout, t, t0, v0);
     plot(t, vVet)
 
-    legend("m(t)", "v0 = 2000.00 L","Vmax = 5000.00 L",  "V(t)")
-
+    legend("m(t)", "v0 = 2000.00 L","Vmax = 5000.00 L",  "V(t)",'location','northeastoutside')
+    epsfilename = '3.2_transbordamento.eps';
+    fprintf('Gerando grafico vetorial em arquivo EPS ''%s''...\n', epsfilename );
+    print( epsfilename ,'-depsc2');
 
 end
 
@@ -549,20 +561,20 @@ function null = Solve32_Qin_equals_Qout()
 
     cVet = cNum(c0, cin, qin, t, v0);
 
-    title("Caso de constância - Qin = 45, Qout = 45\n\nEvolução temporal da concentração para o caso transbordamento\n\n")
+    title("Caso de constância - Qin = 45, Qout = 45\n\nEvolução temporal da concentração para o caso constante\n\n")
     ylabel("c(t) [Kg/L]")
     xlabel("t [min]")
     plot(t, cVet)
     line(x, [c0 c0], "linestyle", "--", "color", "g")
     line(x, [cin cin], "linestyle", "--", "color", "r")
 
-    legend("c(t)", "c0 = 0.05 kg/L", "cin = 2.00 kg/L")
+    legend("c(t)", "c0 = 0.05 kg/L", "cin = 2.00 kg/L",'location','northeastoutside')
     hold off;
 
     subplot(2,1,2)
 
     hold on;
-    title("Evolução temporal do material e volume do tanque para o caso transbordamento\n\n")
+    title("Evolução temporal do material e volume do tanque para o caso constante\n\n")
     ylabel("c(t) [Kg/L]")
     xlabel("t [min]")
 
@@ -578,12 +590,16 @@ function null = Solve32_Qin_equals_Qout()
     line(x, [v0, v0], "linestyle", "-", "color", "k")
 
 
-    legend("m(t)", "v0 = 2000.00 L","Vmax = 5000.00 L",  "V(t)")
-
+    legend("m(t)", "v0 = 2000.00 L","Vmax = 5000.00 L",  "V(t)",'location','northeastoutside')
+    epsfilename = '3.2_volumecte.eps';
+    fprintf('Gerando grafico vetorial em arquivo EPS ''%s''...\n', epsfilename );
+    print( epsfilename ,'-depsc2');
 end
 
-
+SolveLetraA()
+SolveLetraB()
+SolveLetraC()
+SolveLetraD()
+SolveQuestao31()
 Solve32_Qin_diff_Qout()
 Solve32_Qin_equals_Qout()
-
-
