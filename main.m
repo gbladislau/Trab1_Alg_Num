@@ -317,7 +317,7 @@ function null = SolveQuestao31()
     t = 0:0.1:400;
 
     sol = yt((Qin-Qout), t, t0, v0);
-  
+
     figure
     hold on;
     axis([0,400,0,5000])
@@ -337,7 +337,7 @@ function null = SolveQuestao31()
     Qin = 50
     Qout = 45
 
-    
+
     figure
     hold on;
     t = 0:0.1:600;
@@ -358,13 +358,13 @@ function null = SolveQuestao31()
 
     %Cenário de constância no volume: Qin = 50, Qout = 50
 
-    
+
     figure
     hold on;
     Qin = 50
     Qout = 50
 
-    
+
     t = 0:0.1:500;
 
     sol = yt(Qin-Qout, t, t0, v0);
@@ -382,12 +382,137 @@ function null = SolveQuestao31()
     hold off;
 end
 
-function null = SolveQuestao32()
-    % QUESTÃO 3.2
 
-    syms qin cin c(t) c0 b qout;
 
-    v(t) =(qin - qout)*t + b;
+
+function null = Solve32_Qin_diff_Qout()
+
+
+    syms cin c(t) c0 t0 v0 qin qout;
+
+    v(t) = (qin-qout)*(t-t0) + v0;
+
+
+    DE = diff(c, t) == (qin * (cin - c(t)))/v(t);
+    cond = c(0) == c0;
+    fprintf("1. Calcule analiticamente a solução c(t) do PVI da concentração\n")
+    c(t) = dsolve(DE, cond)
+
+    syms m(t);
+    fprintf("2. Defina a função do aditivo m(t)\n")
+    m(t)= v(t) * c(t)
+
+    fprintf("3. Converta as funções c(t) e m(t) em funções numéricas pela função auxiliar matlabFunction\n")
+    cNum = matlabFunction(c(t))
+    mNum = matlabFunction(m(t))
+    vNum = matlabFunction(v(t));
+
+    v0 = 2000;
+    c0 = 0.05;
+    cin = 2;
+    vMax = 5000;
+    t0 = 0;
+
+    fprintf("4. Caso de esvaziamento: Qin = 40, Qout = 45\n")
+
+    %Caso de esvaziamento
+
+    figure;
+    subplot(2,1, 1)
+    hold on;
+
+    title("Caso de esvaziamento - Qin = 40, Qout = 45\n\nEvolução temporal da concentração para o caso vazamento")
+    xlabel("t [min]")
+    ylabel("m(t) [kg] V(t) [L]")
+    qin = 40;
+    qout = 45;
+
+    t = 0:0.1:400;
+    x = [0 400];
+    cVet = cNum(c0, cin, qin, qout, t, t0, v0);
+
+
+    plot(t, cVet)
+    line(x, [c0 c0], "linestyle", "--", "color", "g")
+    line(x, [cin cin], "linestyle", "--", "color", "r")
+
+    legend("c(t)", "cin = 2.00 kg/L", "c0 = 0.05 kg/L")
+
+    hold off;
+
+    subplot(2,1,2)
+    hold on;
+    title("Evolução temporal do material e volume do tanque para o caso vazamento")
+    ylabel("c(t) [Kg/L]")
+    xlabel("t [min]")
+
+    mVet = mNum(c0, cin, qin, qout, t, t0, v0);
+    axis([0,400, 0, 5000])
+    plot(t, mVet)
+
+    line(x, [v0 v0], "linestyle", "--", "color", "g")
+    line(x, [vMax vMax], "linestyle", "--", "color", "r")
+
+    vVet = vNum(qin, qout, t, t0, v0);
+    plot(t, vVet)
+
+    legend("m(t)", "v0 = 2000.00 L","Vmax = 5000.00, L","V(t)")
+
+    hold off;
+
+    fprintf("4. Caso de transbordamento: Qin = 45, Qout = 40\n")
+
+
+    %Caso de transbordamento
+
+    figure;
+    subplot(2,1,1)
+    hold on;
+
+    qin = 45;
+    qout = 40;
+
+    t = 0:0.1:600;
+    x = [0 600];
+
+    cVet = cNum(c0, cin, qin, qout, t, t0, v0);
+
+    title("Caso de transbordamento - Qin = 45, Qout = 40\n\nEvolução temporal da concentração para o caso transbordamento\n\n")
+    ylabel("c(t) [Kg/L]")
+    xlabel("t [min]")
+    plot(t, cVet)
+    line(x, [c0 c0], "linestyle", "--", "color", "g")
+    line(x, [cin cin], "linestyle", "--", "color", "r")
+
+    legend("c(t)", "c0 = 0.05 kg/L", "cin = 2.00 kg/L")
+    hold off;
+
+    subplot(2,1,2)
+
+    hold on;
+    title("Evolução temporal do material e volume do tanque para o caso transbordamento\n\n")
+    ylabel("c(t) [Kg/L]")
+    xlabel("t [min]")
+    mVet = mNum(c0, cin, qin, qout, t, t0, v0);
+    axis([0,600])
+    plot(t, mVet)
+    line(x, [v0 v0], "linestyle", "--", "color", "g")
+    line(x, [vMax vMax], "linestyle", "--", "color", "r")
+
+    vVet = vNum(qin, qout, t, t0, v0);
+    plot(t, vVet)
+
+    legend("m(t)", "v0 = 2000.00 L","Vmax = 5000.00 L",  "V(t)")
+
+
+end
+
+function null = Solve32_Qin_equals_Qout()
+
+    syms cin c(t) c0 t0 v0 qin qout;
+
+    v(t) = v0;
+
 
     DE = diff(c, t) == (qin * (cin - c(t)))/v(t);
     cond = c(0) == c0;
@@ -405,64 +530,26 @@ function null = SolveQuestao32()
     cin = 2;
     vMax = 5000;
 
-    %Caso de esvaziamento
-
-    figure;
-    subplot(2,1, 1)
-    hold on;
-
-    title("Evolução temporal da concentração para o caso vazamento")
-    xlabel("t [min]")
-    ylabel("m(t) [kg] V(t) [L]")
-    qin = 40;
-    qout = 45;
-
-    t = 0:0.1:400;
-    x = [0 400];
-    cVet = cNum(v0, c0,cin, qin, qout, t);
+    fprintf("4. Caso de constância: Qin = 45, Qout = 45\n")
 
 
-    plot(t, cVet)
-    line(x, [c0 c0], "linestyle", "--", "color", "g")
-    line(x, [cin cin], "linestyle", "--", "color", "r")
-
-    legend("c(t)", "cin = 2.00 kg/L", "c0 = 0.05 kg/L")
-
-    hold off;
-
-    subplot(2,1,2)
-    hold on;
-    title("Evolução temporal do material e volume do tanque para o caso vazamento")
-    ylabel("c(t) [Kg/L]")
-    xlabel("t [min]")
-    mVet = mNum(v0, c0, cin, qin, qout, t);
-    axis([0,400, 0, 5000])
-    plot(t, mVet)
-
-    line(x, [v0 v0], "linestyle", "--", "color", "g")
-    line(x, [vMax vMax], "linestyle", "--", "color", "r")
-
-    vVet = vNum(v0, qin, qout, t);
-    plot(t, vVet)
-
-    legend("m(t)", "v0 = 2000.00 L","Vmax = 5000.00, L","V(t)")
-
-    hold off;
-
-    %Caso de transbordamento
+    %CASO DE CONSTÂNCIA
 
     figure;
     subplot(2,1,1)
     hold on;
 
-    qin = 45
-    qout = 40
 
-    t = 0:0.1:600;
-    x = [0 600];
 
-    cVet = cNum(v0, c0,cin, qin, qout, t);
-    title("Evolução temporal da concentração para o caso transbordamento\n\n")
+    qin = 45;
+    qout = 45;
+
+    t = 0:0.1:500;
+    x = [0 500];
+
+    cVet = cNum(c0, cin, qin, t, v0);
+
+    title("Caso de constância - Qin = 45, Qout = 45\n\nEvolução temporal da concentração para o caso transbordamento\n\n")
     ylabel("c(t) [Kg/L]")
     xlabel("t [min]")
     plot(t, cVet)
@@ -478,56 +565,25 @@ function null = SolveQuestao32()
     title("Evolução temporal do material e volume do tanque para o caso transbordamento\n\n")
     ylabel("c(t) [Kg/L]")
     xlabel("t [min]")
-    mVet = mNum(v0, c0, cin, qin, qout, t);
-    axis([0,600])
-    plot(t, mVet)
-    line(x, [v0 v0], "linestyle", "--", "color", "g")
-    line(x, [vMax vMax], "linestyle", "--", "color", "r")
 
-    vVet = vNum(v0, qin, qout, t);
-    plot(t, vVet)
+    mVet = mNum(c0, cin, qin, t, v0);
 
-    legend("m(t)", "v0 = 2000.00 L","Vmax = 5000.00 L",  "V(t)")
-
-
-    %Caso de constancia
-    hold off;
-    figure;
-    hold on;
-
-
-    qin = 45
-    qout = 44.999
-
-    t = 0:0.1:500;
-    x = [0 500];
-
-    cVet = cNum(v0, c0, cin, qin, qout, t);
-    title("Evolução temporal da concentração para o caso de constância\n\n")
-    plot(t, cVet)
-    line(x, [c0 c0], "linestyle", "--", "color", "g")
-    line(x, [cin cin], "linestyle", "--", "color", "r")
-
-    legend("c(t)", "c0 = 0.05 kg/L", "cin = 2.00 kg/L")
-
-    hold off;
-    figure;
-    hold on;
-    title("Evolução temporal do material e volume do tanque para o caso de constância\n\n")
-    mVet = mNum(v0, c0, cin, qin, qout, t);
     axis([0,500])
     plot(t, mVet)
     line(x, [v0 v0], "linestyle", "--", "color", "g")
     line(x, [vMax vMax], "linestyle", "--", "color", "r")
 
-    vVet = vNum(v0, qin, qout, t);
-    plot(t, vVet)
+    vVet = vNum(v0);
+    %Como vVet é um vetor constante, temos que:
+    line(x, [v0, v0], "linestyle", "-", "color", "k")
+
 
     legend("m(t)", "v0 = 2000.00 L","Vmax = 5000.00 L",  "V(t)")
 
 end
-SolveLetraA();
-SolveLetraB();
-SolveLetraC();
-SolveLetraD();
+
+
+Solve32_Qin_diff_Qout()
+Solve32_Qin_equals_Qout()
+
 
