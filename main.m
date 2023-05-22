@@ -325,15 +325,20 @@ function null = SolveQuestao31()
     line(X,[Vmax Vmax], "linestyle", "--", "color", "r");
     plot(t, sol);
 
-    title("Evolução temporal do volume no tanque");
+    title("Evolucao temporal do volume no tanque");
     xlabel("t [min]");
     ylabel("V(t) [L]");
-
-
-    legend("v0 = 2000.00 L", "Vmax = 5000.00 L","V (t)",'location','northeastoutside');
+    
+    a = 400;
+    plot([a a], [0 Vmax])
+    
+    legend("v0 = 2000.00 L", "Vmax = 5000.00 L","V (t)", "Vazamento completo do tanque",'location','northeastoutside');
     epsfilename = '3.1_esvaziamento.eps';
     fprintf('Gerando grafico vetorial em arquivo EPS ''%s''...\n', epsfilename );
     print( epsfilename ,'-depsc2');
+    
+   
+    
     hold off;
 
     %Cenário de transbordamento: Qin = 50, Qout = 45
@@ -352,10 +357,12 @@ function null = SolveQuestao31()
     line(X,[Vmax Vmax], "linestyle", "--", "color", "r");
     plot(t, sol);
 
-    title("Evolução temporal do volume no tanque")
+    title("Evolucao temporal do volume no tanque")
     xlabel("t [min")
     ylabel("V(t) [L]")
-    legend("v0 = 2000.00 L", "Vmax = 5000.00 L","V (t)",'location','northeastoutside');
+    a = 600;
+    plot([a a], [0 Vmax])
+    legend("v0 = 2000.00 L", "Vmax = 5000.00 L","V (t)", "Transbordagem do tanque",'location','northeastoutside');
     epsfilename = '3.1_transbordamento.eps';
     fprintf('Gerando grafico vetorial em arquivo EPS ''%s''...\n', epsfilename );
     print( epsfilename ,'-depsc2');
@@ -380,7 +387,7 @@ function null = SolveQuestao31()
 
     plot(t, sol);
 
-    title("Evolução temporal do volume no tanque")
+    title("Evolucao temporal do volume no tanque")
     xlabel("t [min]")
     ylabel("V(t) [L]")
     legend("v0 = 2000.00 L", "Vmax = 5000.00 L","V (t)",'location','northeastoutside');
@@ -429,7 +436,7 @@ function null = Solve32_Qin_diff_Qout()
     subplot(2,1, 1)
     hold on;
 
-    title("Caso de esvaziamento - Qin = 40, Qout = 45\n\nEvolução temporal da concentração para o caso vazamento")
+    title("Caso de esvaziamento - Qin = 40, Qout = 45\n\nEvolucao temporal da concentracao para o caso vazamento")
     xlabel("t [min]")
     ylabel("m(t) [kg] V(t) [L]")
     qin = 40;
@@ -443,13 +450,15 @@ function null = Solve32_Qin_diff_Qout()
     plot(t, cVet)
     line(x, [c0 c0], "linestyle", "--", "color", "g")
     line(x, [cin cin], "linestyle", "--", "color", "r")
+    
+    
 
     legend("c(t)", "cin = 2.00 kg/L", "c0 = 0.05 kg/L",'location','northeastoutside')
     hold off;
 
     subplot(2,1,2)
     hold on;
-    title("Evolução temporal do material e volume do tanque para o caso vazamento")
+    title("Evolucao temporal do material e volume do tanque para o caso vazamento")
     ylabel("c(t) [Kg/L]")
     xlabel("t [min]")
 
@@ -459,11 +468,14 @@ function null = Solve32_Qin_diff_Qout()
 
     line(x, [v0 v0], "linestyle", "--", "color", "g")
     line(x, [vMax vMax], "linestyle", "--", "color", "r")
+    
+    a = 400;
+    plot([a a], [0 vMax])
 
     vVet = vNum(qin, qout, t, t0, v0);
     plot(t, vVet)
 
-    legend("m(t)", "v0 = 2000.00 L","Vmax = 5000.00, L","V(t)",'location','northeastoutside')
+    legend("m(t)", "v0 = 2000.00 L","Vmax = 5000.00, L","V(t)", "Vazamento Completo do tanque",'location','northeastoutside')
 
     epsfilename = '3.2_esvaziamento.eps';
     fprintf('Gerando grafico vetorial em arquivo EPS ''%s''...\n', epsfilename );
@@ -487,7 +499,7 @@ function null = Solve32_Qin_diff_Qout()
 
     cVet = cNum(c0, cin, qin, qout, t, t0, v0);
 
-    title("Caso de transbordamento - Qin = 45, Qout = 40\n\nEvolução temporal da concentração para o caso transbordamento\n\n")
+    title("Caso de transbordamento - Qin = 45, Qout = 40\n\nEvoluo temporal da concentracao para o caso transbordamento\n\n")
     ylabel("c(t) [Kg/L]")
     xlabel("t [min]")
     plot(t, cVet)
@@ -500,7 +512,7 @@ function null = Solve32_Qin_diff_Qout()
     subplot(2,1,2)
 
     hold on;
-    title("Evolução temporal do material e volume do tanque para o caso transbordamento\n\n")
+    title("Evolucao temporal do material e volume do tanque para o caso transbordamento\n\n")
     ylabel("c(t) [Kg/L]")
     xlabel("t [min]")
     mVet = mNum(c0, cin, qin, qout, t, t0, v0);
@@ -511,8 +523,11 @@ function null = Solve32_Qin_diff_Qout()
 
     vVet = vNum(qin, qout, t, t0, v0);
     plot(t, vVet)
+    
+    a = 600;
+    plot([a a], [0 vMax])
 
-    legend("m(t)", "v0 = 2000.00 L","Vmax = 5000.00 L",  "V(t)",'location','northeastoutside')
+    legend("m(t)", "v0 = 2000.00 L","Vmax = 5000.00 L",  "V(t)","Transbordagem do tanque",'location','northeastoutside')
     epsfilename = '3.2_transbordamento.eps';
     fprintf('Gerando grafico vetorial em arquivo EPS ''%s''...\n', epsfilename );
     print( epsfilename ,'-depsc2');
@@ -561,7 +576,7 @@ function null = Solve32_Qin_equals_Qout()
 
     cVet = cNum(c0, cin, qin, t, v0);
 
-    title("Caso de constância - Qin = 45, Qout = 45\n\nEvolução temporal da concentração para o caso constante\n\n")
+    title("Caso de constancia - Qin = 45, Qout = 45\n\nEvolucao temporal da concentracao para o caso constante\n\n")
     ylabel("c(t) [Kg/L]")
     xlabel("t [min]")
     plot(t, cVet)
@@ -574,7 +589,7 @@ function null = Solve32_Qin_equals_Qout()
     subplot(2,1,2)
 
     hold on;
-    title("Evolução temporal do material e volume do tanque para o caso constante\n\n")
+    title("Evolucao temporal do material e volume do tanque para o caso constante\n\n")
     ylabel("c(t) [Kg/L]")
     xlabel("t [min]")
 
@@ -596,10 +611,7 @@ function null = Solve32_Qin_equals_Qout()
     print( epsfilename ,'-depsc2');
 end
 
-SolveLetraA()
-SolveLetraB()
-SolveLetraC()
-SolveLetraD()
+
 SolveQuestao31()
 Solve32_Qin_diff_Qout()
 Solve32_Qin_equals_Qout()
