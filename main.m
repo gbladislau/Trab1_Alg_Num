@@ -326,32 +326,33 @@ function null = SolveQuestao31()
 
     DE = diff(y, t) == C;
     cond = y(t0) == v0;
+    fprintf("1. Solução Analítica V(t)\n")
     V = dsolve(DE,cond)
 
     %SOLUÇÃO SIMBÓLICA DO PVI
-
+    fprintf("2. Função numérica\n")
     yt = matlabFunction(V);
     %C, t, t0, v0
 
     %3 CASOS:
 
-    t0 = 0
-    v0 = 2000
-    Vmax = 5000
-    Vmin = 0
+    t0 = 0;
+    v0 = 2000;
+    Vmax = 5000;
+    Vmin = 0;
 
     %Cenário de esvaziamento: Qin = 45, Qout = 50
     X = [0 400];
-
-    Qin = 45
-    Qout = 50
+    fprintf("3. Tempo para esvaziamento: 400\n")
+    Qin = 45;
+    Qout = 50;
     t = 0:0.1:400;
 
     sol = yt((Qin-Qout), t, t0, v0);
 
     figure
     hold on;
-    axis([0,400,0,5000])
+    axis([0,400,0,5000]);
     line(X,[v0 v0], "linestyle", "--", "color", "g");
     line(X,[Vmax Vmax], "linestyle", "--", "color", "r");
     plot(t, sol);
@@ -373,9 +374,9 @@ function null = SolveQuestao31()
     hold off;
 
     %Cenário de transbordamento: Qin = 50, Qout = 45
-    Qin = 50
-    Qout = 45
-
+    Qin = 50;
+    Qout = 45;
+    fprintf("3. Tempo para transbordamento: 600\n")
 
     figure
     hold on;
@@ -404,9 +405,8 @@ function null = SolveQuestao31()
 
     figure
     hold on;
-    Qin = 50
-    Qout = 50
-
+    Qin = 50;
+    Qout = 50;
 
     t = 0:0.1:500;
 
@@ -418,9 +418,9 @@ function null = SolveQuestao31()
 
     plot(t, sol);
 
-    title("Evolucao temporal do volume no tanque")
-    xlabel("t [min]")
-    ylabel("V(t) [L]")
+    title("Evolucao temporal do volume no tanque");
+    xlabel("t [min]");
+    ylabel("V(t) [L]");
     legend("v0 = 2000.00 L", "Vmax = 5000.00 L","V (t)",'location','northeastoutside');
     epsfilename = '3.1_volumecte.eps';
     fprintf('Gerando grafico vetorial em arquivo EPS ''%s''...\n', epsfilename );
