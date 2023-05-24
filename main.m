@@ -29,8 +29,10 @@ function SolveLetraA()
 
     fprintf('\n')
     disp(PVIstr)
-    fprintf('\nSolucao do PVI: ')
+    fprintf('\n1 - Solucao Analítica do PVI: ')
     disp(yxstr)
+    fprintf('\n2 - Solucao Numérica: ')
+    disp(yx)
     fprintf('\n')
     n = 5.0;
     passo = 0.5;
@@ -63,8 +65,10 @@ function SolveLetraB()
 
     fprintf('\n')
     disp(PVIstr)
-    fprintf('\nSolucao do PVI: ')
+    fprintf('\n1 - Solucao Analítica do PVI: ')
     disp(yxstr)
+    fprintf('\n2 - Solucao Numérica: ')
+    disp(yx)
 
     fprintf('\n')
     n = 5.0;
@@ -99,8 +103,10 @@ function SolveLetraC()
 
     fprintf('\n')
     disp(PVIstr)
-    fprintf('\nSolucao do PVI: ')
+    fprintf('\n1 - Solucao Analítica do PVI: ')
     disp(yxstr)
+    fprintf('\n2 - Solucao Numérica: ')
+    disp(yx)
 
     fprintf('\n')
     n = 5.0;
@@ -133,8 +139,10 @@ function SolveLetraD()
 
     fprintf('\n')
     disp(PVIstr)
-    fprintf('\nSolucao do PVI: ')
+    fprintf('\n1 - Solucao Analítica do PVI: ')
     disp(yxstr)
+    fprintf('\n2 - Solucao Numérica: ')
+    disp(yx)
 
     fprintf('\n')
     n = 5.0;
@@ -147,6 +155,7 @@ function null = PlotaGraficoComSolucoes(f,yx, passo, n,x0,y0,nome)
     Y_Solucoes = [];
     x = x0;
     output = [];
+    fprintf("3 - Discretizando Solucao")
     for i = 0 : n
         fprintf("Valor de x = %f // Valor de y = %f\n",x, yx(x))
         output = [output ; x, yx(x)];
@@ -155,7 +164,26 @@ function null = PlotaGraficoComSolucoes(f,yx, passo, n,x0,y0,nome)
 
     figure
     hold on;
+    title1 = strcat("3 - Discretizacao da Solucao, Letra ",nome);
+    title(title1)
+
+    scatter(output(:,1),output(:,2), 20, 'k', 'filled')
+
+    ax = [output(1,1) output(end,1)];
+    x = ax(1) : passo/10 : ax(2);
+    plot(x,yx(x),'r')
+
+    legend("(x,y)","y(x)",'location','northeastoutside');
+    epsfilename = strcat('Letra_',nome,'_fig_1');
+    fprintf('Gerando grafico vetorial em arquivo EPS ''%s''...\n\n', epsfilename );
+    print( epsfilename ,'-depsc2');
+
+    hold off;
+    figure
+    hold on;
     #MOSTRANDO ONDE estao os passos x e y
+    title1 = strcat("5 - Solucao por metodo, Letra ", nome);
+    title(title1)
 
     scatter(output(:,1),output(:,2), 20, 'k', 'filled')
 
@@ -169,6 +197,7 @@ function null = PlotaGraficoComSolucoes(f,yx, passo, n,x0,y0,nome)
 
     Y_Solucoes = [Y_Solucoes output];
 
+    fprintf("4 - Calculando valores por métodos e salvando para plotar\n\n")
     leg{end+1} = sprintf('Euler');
     [Euler_x Euler_y] = Euler(f, x0, y0, passo, n);
     plot(Euler_x,Euler_y,'r+-');
@@ -187,7 +216,7 @@ function null = PlotaGraficoComSolucoes(f,yx, passo, n,x0,y0,nome)
     leg{end+1} = sprintf('Van der Houwen’s/Wray third-order');
     butcher.a = zeros(3,3);
     butcher.a(2,1) = 8/15;
-    butcher.a(3,1) = 1/4; butcher.a(3,2) = 5/12
+    butcher.a(3,1) = 1/4; butcher.a(3,2) = 5/12;
     butcher.c = [0 8/15 2/3];
     butcher.b = [1/4 0 3/4];
     butcher.isEmbedded = false;
@@ -222,8 +251,8 @@ function null = PlotaGraficoComSolucoes(f,yx, passo, n,x0,y0,nome)
     plot(DPpa_x, DPpa_y,'rd-');
 
     legend(leg,'location','northeastoutside');
-    epsfilename = strcat('Letra_',nome,'_fig_1');
-    fprintf('Gerando grafico vetorial em arquivo EPS ''%s''...\n', epsfilename );
+    epsfilename = strcat('Letra_',nome,'_fig_2');
+    fprintf('Gerando grafico vetorial em arquivo EPS ''%s''...\n\n', epsfilename );
     print( epsfilename ,'-depsc2');
 
 
@@ -235,9 +264,10 @@ function null = PlotaGraficoComSolucoes(f,yx, passo, n,x0,y0,nome)
 
 
     %QUESTÃO 6:
-
     figure
     hold on;
+    title1 = strcat("6 - Erro por metodo, Letra ", nome);
+    title(title1)
     markers = {'r+-','g', 'm--', 'cd-', 'rs-', 'bo-', 'md-','rd-'};
     mk = 1;
     for i = 3:9
@@ -254,10 +284,11 @@ function null = PlotaGraficoComSolucoes(f,yx, passo, n,x0,y0,nome)
            "Dormand_Prince RungeKutta", "Dormand_Prince PassoFixo","Dormand_Prince PassoAdaptativo",
            'location','northeastoutside');
 
-    epsfilename = strcat('Letra_',nome,'_fig_2_erro');
-    fprintf('Gerando grafico vetorial em arquivo EPS ''%s''...\n', epsfilename );
+    epsfilename = strcat('Letra_',nome,'_fig_3_erro');
+    fprintf('Gerando grafico vetorial em arquivo EPS ''%s''...\n\n', epsfilename );
     print( epsfilename ,'-depsc2');
 
+    fprintf("7 e 8 - Tabela com valores das soluções e Erros dos metodos.\n")
     fprintf('%12s | %12s | %12s | %12s | %12s | %12s | %12s | %12s | %12s | %12s\n',
     'x', 'Valor Exato',
     'Euler', 'Euler Mel.', 'Euler Mod.',
@@ -611,7 +642,4 @@ function null = Solve32_Qin_equals_Qout()
     print( epsfilename ,'-depsc2');
 end
 
-
-SolveQuestao31()
-Solve32_Qin_diff_Qout()
-Solve32_Qin_equals_Qout()
+SolveLetraA()
