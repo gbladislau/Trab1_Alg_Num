@@ -331,7 +331,7 @@ function null = SolveQuestao31()
 
     %SOLUÇÃO SIMBÓLICA DO PVI
     fprintf("2. Função numérica\n")
-    yt = matlabFunction(V);
+    yt = matlabFunction(V)
     %C, t, t0, v0
 
     %3 CASOS:
