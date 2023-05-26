@@ -174,7 +174,7 @@ function null = PlotaGraficoComSolucoes(f,yx, passo, n,x0,y0,nome)
     plot(x,yx(x),'r')
 
     legend("(x,y)","y(x)",'location','northeastoutside');
-    epsfilename = strcat('Letra_',nome,'_fig_1');
+    epsfilename = strcat('Letra_',nome,'_fig_3');
     fprintf('Gerando grafico vetorial em arquivo EPS ''%s''...\n\n', epsfilename );
     print( epsfilename ,'-depsc2');
 
@@ -222,7 +222,7 @@ function null = PlotaGraficoComSolucoes(f,yx, passo, n,x0,y0,nome)
     butcher.isEmbedded = false;
     [Van_T Van_Y Y_low] = RungeKutta(f, x0, y0, passo, n, butcher, 3);
     plot(Van_T,Van_Y,'cd-');
-    Y_Solucoes = [Y_Solucoes Van_T(:)];
+    Y_Solucoes = [Y_Solucoes Van_Y(:)];
 
     leg{end+1} = sprintf('Ralston’s fourth-order method');
     butcher.a = zeros(4,4);
@@ -234,7 +234,7 @@ function null = PlotaGraficoComSolucoes(f,yx, passo, n,x0,y0,nome)
     butcher.isEmbedded = false;
     [Rals_T Rals_Y Y_low] = RungeKutta(f, x0, y0, passo, n, butcher, 4);
     plot(Rals_T ,Rals_Y,'rs-');
-    Y_Solucoes = [Y_Solucoes Rals_T(:)];
+    Y_Solucoes = [Y_Solucoes Rals_Y(:)];
 
     leg{end+1} = sprintf('Dormand_Prince RungeKutta');
     [DP_x DP_y Y_low] = RungeKutta_Dormand_Prince45(f, x0, y0, passo, n);
@@ -251,7 +251,7 @@ function null = PlotaGraficoComSolucoes(f,yx, passo, n,x0,y0,nome)
     plot(DPpa_x, DPpa_y,'rd-');
 
     legend(leg,'location','northeastoutside');
-    epsfilename = strcat('Letra_',nome,'_fig_2');
+    epsfilename = strcat('Letra_',nome,'_fig_1');
     fprintf('Gerando grafico vetorial em arquivo EPS ''%s''...\n\n', epsfilename );
     print( epsfilename ,'-depsc2');
 
@@ -284,7 +284,7 @@ function null = PlotaGraficoComSolucoes(f,yx, passo, n,x0,y0,nome)
            "Dormand_Prince RungeKutta", "Dormand_Prince PassoFixo","Dormand_Prince PassoAdaptativo",
            'location','northeastoutside');
 
-    epsfilename = strcat('Letra_',nome,'_fig_3_erro');
+    epsfilename = strcat('Letra_',nome,'_fig_2_erro');
     fprintf('Gerando grafico vetorial em arquivo EPS ''%s''...\n\n', epsfilename );
     print( epsfilename ,'-depsc2');
 
@@ -303,7 +303,8 @@ function null = PlotaGraficoComSolucoes(f,yx, passo, n,x0,y0,nome)
     end
 
     nome_arq = cstrcat("letra_",nome,"_vetores.txt");
-    save("-text",nome_arq, 'Y_Solucoes' );
+    YSOL_T = Y_Solucoes.';
+    save("-text",nome_arq, 'Y_T' );
 
     fprintf("ERROS\n")
     for i=1:length(Euler_x)
@@ -313,6 +314,7 @@ function null = PlotaGraficoComSolucoes(f,yx, passo, n,x0,y0,nome)
     end
     nome_arq = cstrcat("letra_",nome,'_erros.txt');
     vet_erros = [Euler_x(:) (yx(Euler_x(:))-yx(Euler_x(:)))(:) Erros(:,3:9)];
+    vet_erros_t = vet_erros.';
     save("-text", nome_arq, 'vet_erros');
 
 end
@@ -641,4 +643,7 @@ function null = Solve32_Qin_equals_Qout()
     fprintf('Gerando grafico vetorial em arquivo EPS ''%s''...\n', epsfilename );
     print( epsfilename ,'-depsc2');
 end
-
+SolveLetraA()
+SolveLetraB()
+SolveLetraC()
+SolveLetraD()
