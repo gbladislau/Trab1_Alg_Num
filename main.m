@@ -533,7 +533,7 @@ function null = Solve32_Qin_diff_Qout()
     cVet = cNum(c0, cin, qin, qout, t, t0, v0);
 
     title("Caso de transbordamento - Qin = 45, Qout = 40\n\nEvoluo temporal da concentracao para o caso transbordamento\n\n")
-    ylabel("c(t) [Kg/L]")
+    ylabel(""m(t) [kg] V(t) [L]")
     xlabel("t [min]")
     plot(t, cVet)
     line(x, [c0 c0], "linestyle", "--", "color", "g")
@@ -610,7 +610,7 @@ function null = Solve32_Qin_equals_Qout()
     cVet = cNum(c0, cin, qin, t, v0);
 
     title("Caso de constancia - Qin = 45, Qout = 45\n\nEvolucao temporal da concentracao para o caso constante\n\n")
-    ylabel("c(t) [Kg/L]")
+    ylabel(""m(t) [kg] V(t) [L]")
     xlabel("t [min]")
     plot(t, cVet)
     line(x, [c0 c0], "linestyle", "--", "color", "g")
