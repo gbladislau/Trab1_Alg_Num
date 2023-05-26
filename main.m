@@ -304,7 +304,7 @@ function null = PlotaGraficoComSolucoes(f,yx, passo, n,x0,y0,nome)
 
     nome_arq = cstrcat("letra_",nome,"_vetores.txt");
     YSOL_T = Y_Solucoes.';
-    save("-text",nome_arq, 'Y_T' );
+    save("-text",nome_arq, 'YSOL_T' );
 
     fprintf("ERROS\n")
     for i=1:length(Euler_x)
@@ -315,7 +315,7 @@ function null = PlotaGraficoComSolucoes(f,yx, passo, n,x0,y0,nome)
     nome_arq = cstrcat("letra_",nome,'_erros.txt');
     vet_erros = [Euler_x(:) (yx(Euler_x(:))-yx(Euler_x(:)))(:) Erros(:,3:9)];
     vet_erros_t = vet_erros.';
-    save("-text", nome_arq, 'vet_erros');
+    save("-text", nome_arq, 'vet_erros_t');
 
 end
 
